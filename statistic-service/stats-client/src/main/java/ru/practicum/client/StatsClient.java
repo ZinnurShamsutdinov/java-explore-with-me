@@ -1,58 +1,48 @@
 package ru.practicum.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriBuilder;
 import ru.practicum.common.dto.EndpointHitDto;
-import ru.practicum.common.formatter.DateTimeFormatter;
+import ru.practicum.common.dto.ViewStats;
 
-import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.function.Function;
 
-@Service
-public class StatsClient extends BaseClient {
+public class StatsClient {
 
-    @Autowired
-    public StatsClient(@Value("${stats-server.url}") String serverUrl, WebClient.Builder webClientBuilder) {
-        super(webClientBuilder.baseUrl(serverUrl).build());
+    private final WebClient client;
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
+
+    public StatsClient(String serverUrl) {
+        this.client = WebClient.create(serverUrl);
     }
 
-    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> {
-            UriBuilder builder = uriBuilder.path("/stats")
-                    .queryParam("start", start.format(DateTimeFormatter.DATE_TIME_FORMATTER))
-                    .queryParam("end", end.format(DateTimeFormatter.DATE_TIME_FORMATTER))
-                    .queryParam("unique", unique);
-
-            if (uris != null && !uris.isEmpty()) {
-                String urisString = String.join(",", uris);
-                builder.queryParam("uris", urisString);
-            }
-            return builder.build();
-        };
-
-        return get(uriFunction);
+    //Метод получения статистики по посещениям
+    public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        return client.get()
+                .uri(uriBuilder -> uriBuilder.path("/stats")
+                        .queryParam("start", start.format(formatter))
+                        .queryParam("end", end.format(formatter))
+                        .queryParam("uris", uris)
+                        .queryParam("unique", unique)
+                        .build())
+                .retrieve()
+                .bodyToFlux(ViewStats.class)
+                .collectList()
+                .block();
     }
 
-    public ResponseEntity<Object> createHit(String app, String ip, String uri, LocalDateTime timestamp) {
-        EndpointHitDto endpointHitDto = EndpointHitDto.builder()
-                .app(app)
-                .ip(ip)
-                .uri(uri)
-                .timestamp(timestamp.format(DateTimeFormatter.DATE_TIME_FORMATTER))
-                .build();
-
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> {
-            UriBuilder builder = uriBuilder.path("/hit");
-            return builder.build();
-        };
-
-        return post(endpointHitDto, uriFunction);
+    //Метод создания запроса Hit
+    public void createHit(EndpointHitDto endpointHitDto) {
+        client.post()
+                .uri("/hit")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .bodyValue(endpointHitDto)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
     }
 }
