@@ -1,7 +1,6 @@
 package ru.practicum.common.dto;
 
 import lombok.Builder;
-import lombok.Getter;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
