@@ -2,7 +2,7 @@ package ru.practicum.main.service.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.client.StatsClient;
+import ru.practicum.main.client.StatsClient;
 import ru.practicum.common.dto.ViewStats;
 import ru.practicum.main.entity.enums.RequestStatus;
 import ru.practicum.main.entity.models.Event;
@@ -20,13 +20,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Класс обработки событий
+ */
 @Service
 @RequiredArgsConstructor
 public class ProcessingEvents {
     private final RequestRepository requestRepository;
     private final StatsClient statsClient;
 
-    // Метод добавления просмотров в список событий
+    /**
+     * Метод добавления просмотров в список событий
+     *
+     * @param events Список событий
+     * @return Лист событий
+     */
     public List<Event> addViewsInEventsList(List<Event> events, HttpServletRequest request) {
         List<String> uris = events.stream().map(e -> request.getRequestURI() + "/" + e.getId()).collect(Collectors.toList());
         LocalDateTime start = findStartDateTime(events);
@@ -36,7 +44,13 @@ public class ProcessingEvents {
         return events;
     }
 
-    //Метод заполнения списка событий
+    /**
+     * Метод заполнения списка событий
+     *
+     * @param events  Список объектов Event
+     * @param stats   Список объектов ViewStatsDto
+     * @param baseUri Текстовое представление ссылки
+     */
     private void fillEventViews(List<Event> events, List<ViewStats> stats, String baseUri) {
         if (!stats.isEmpty()) {
             Map<String, Long> statsByUri = stats.stream().collect(Collectors.groupingBy(
@@ -52,7 +66,12 @@ public class ProcessingEvents {
         }
     }
 
-    //Метод подтверждения заявок на участие в данном событии
+    /**
+     * Метод подтверждения заявок на участие в данном событии
+     *
+     * @param events Список объектов Event
+     * @return Список объектов Event
+     */
     public List<Event> confirmRequests(List<Event> events) {
         Map<Event, Long> requestsPerEvent = requestRepository.findAllByEventInAndStatus(events, RequestStatus.CONFIRMED)
                 .stream()
@@ -71,12 +90,23 @@ public class ProcessingEvents {
         return newEvents;
     }
 
-    //Метод получения количества запросов по событию и статусу
+    /**
+     * Метод получения количества запросов по событию и статусу
+     *
+     * @param event  Объект Event
+     * @param status Объект RequestStatus
+     * @return Значение количества запросов
+     */
     public long confirmedRequestsForOneEvent(Event event, RequestStatus status) {
         return requestRepository.countRequestByEventAndStatus(event, status);
     }
 
-    // Метод поиска просмотров
+    /**
+     * Метод поиска просмотров
+     *
+     * @param event Объект Event
+     * @return Значение количества просмотров
+     */
     public long searchViews(Event event, HttpServletRequest request) {
         LocalDateTime date = LocalDateTime.of(LocalDate.of(1900, 1, 1), LocalTime.of(0, 0, 1));
         LocalDateTime start = event.getPublishedOn() == null ? date : event.getPublishedOn();
@@ -84,7 +114,12 @@ public class ProcessingEvents {
         return stats.stream().map(ViewStats::getHits).reduce(0L, Long::sum);
     }
 
-    //Метод проверки времени публикации событий
+    /**
+     * Метод проверки времени публикации событий
+     *
+     * @param events Список объектов событий
+     * @return Время публикации
+     */
     private LocalDateTime findStartDateTime(List<Event> events) {
         LocalDateTime start;
         Event event = events.stream().sorted(Comparator.comparing(Event::getCreatedOn)).collect(Collectors.toList()).get(0);

@@ -9,7 +9,9 @@ import ru.practicum.main.entity.dto.user.UserShortDto;
 
 import java.time.LocalDateTime;
 
-//Модель объекта EventFull Data Transfer Object
+/**
+ * Модель объекта EventFull Data Transfer Object
+ */
 @Value
 @Builder
 public class EventFullDto {

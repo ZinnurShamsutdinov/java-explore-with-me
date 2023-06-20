@@ -6,7 +6,10 @@ import lombok.Value;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-// Модель объекта UpdateCompilationRequest Данные о подборке событий
+/**
+ * Модель объекта UpdateCompilationRequest
+ * (Данные о подборке событий)
+ */
 @Builder
 @Value
 public class UpdateCompilationRequest {

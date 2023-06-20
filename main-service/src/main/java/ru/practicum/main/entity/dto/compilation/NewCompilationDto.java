@@ -7,7 +7,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-//Модель объекта NewCompilation Data Transfer Object Данные для добавления новой подборки событий
+/**
+ * Модель объекта NewCompilation Data Transfer Object
+ * (Данные для добавления новой подборки событий)
+ */
 @Value
 @Builder
 public class NewCompilationDto {

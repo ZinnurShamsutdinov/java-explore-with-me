@@ -13,11 +13,18 @@ import ru.practicum.main.utilities.DateFormatter;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-//Утилитарный класс EventMapper для преобразования Event / EventShortDto / EventFullDto / EventState
+/**
+ * Утилитарный класс EventMapper для преобразования Event / EventShortDto / EventFullDto / EventState
+ */
 @UtilityClass
 public class EventMapper {
 
-    //Преобразование Event в EventShortDto
+    /**
+     * Преобразование Event в EventShortDto
+     *
+     * @param event Объект Event
+     * @return Преобразованный объект EventShortDto
+     */
     public EventShortDto eventToeventShortDto(Event event) {
         return EventShortDto.builder()
                 .annotation(event.getAnnotation())
@@ -32,7 +39,12 @@ public class EventMapper {
                 .build();
     }
 
-    //Преобразование Event в EventFullDto
+    /**
+     * Преобразование Event в EventFullDto
+     *
+     * @param event Объект Event
+     * @return Преобразованный объект EventFullDto
+     */
     public EventFullDto eventToEventFullDto(Event event) {
         return EventFullDto.builder()
                 .annotation(event.getAnnotation())
@@ -54,7 +66,16 @@ public class EventMapper {
                 .build();
     }
 
-    //Преобразование нескольких параметров в Event
+    /**
+     * Преобразование нескольких параметров в Event
+     *
+     * @param newEventDto       Объект NewEventDto
+     * @param user              Объект User
+     * @param category          Объект Category
+     * @param views             Количество просмотрев события
+     * @param confirmedRequests Количество одобренных заявок на участие в данном событии
+     * @return Преобразованный объект Event
+     */
     public static Event newEventDtoToCreateEvent(NewEventDto newEventDto, User user, Category category, Long views,
                                                  Long confirmedRequests) {
         LocalDateTime dateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);

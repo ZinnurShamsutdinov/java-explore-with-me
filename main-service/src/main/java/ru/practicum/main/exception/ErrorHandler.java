@@ -14,7 +14,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//Класс ErrorHandlerMain обработчик ошибок
+/**
+ * Класс ErrorHandler обработчик ошибок
+ */
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {

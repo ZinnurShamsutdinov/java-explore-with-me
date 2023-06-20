@@ -10,7 +10,9 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-//Класс (Публичный контроллер для работы с подборками событий) CompilationPublicController по энпоинту compilations
+/**
+ * Класс CompilationPublicController по энпоинту compilations
+ */
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +21,14 @@ public class CompilationPublicController {
 
     private final CompilationPublicService compilationPublicService;
 
-    //Эндпоинт получения списка подборок событий
+    /**
+     * Метод (эндпоинт) получения списка подборок событий
+     *
+     * @param pinned Закреплена ли подборка на главной странице сайта
+     * @param from   Количество элементов, которые нужно пропустить для формирования текущего набора
+     * @param size   Количество элементов в наборе
+     * @return Список подборок событий
+     */
     @GetMapping()
     public List<CompilationDto> get(@RequestParam(required = false) Boolean pinned,
                                     @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
@@ -27,7 +36,12 @@ public class CompilationPublicController {
         return compilationPublicService.get(pinned, from, size);
     }
 
-    //Эндпоинт получения подборки событий по ID
+    /**
+     * Метод (эндпоинт) получения подборки событий по ID
+     *
+     * @param compId ID подборки событий
+     * @return Искомая подборка событий
+     */
     @GetMapping("/{compId}")
     public CompilationDto get(@PathVariable Long compId) {
         return compilationPublicService.get(compId);

@@ -4,7 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
-//Модель сущности Category
+/**
+ * Модель сущности Category
+ */
 @Getter
 @Setter
 @Entity

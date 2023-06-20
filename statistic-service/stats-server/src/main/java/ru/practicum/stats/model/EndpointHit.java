@@ -5,6 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Модель объекта Hit
+ */
 @Getter
 @Setter
 @AllArgsConstructor

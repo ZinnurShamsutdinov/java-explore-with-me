@@ -19,7 +19,7 @@ import ru.practicum.main.exception.ResourceNotFoundException;
 import ru.practicum.main.mapper.EventMapper;
 import ru.practicum.main.mapper.LocationMapper;
 import ru.practicum.main.repository.EventRepository;
-import ru.practicum.main.repository.FindObjectInRepository;
+import ru.practicum.main.service.FindObjectInService;
 import ru.practicum.main.utilities.DateFormatter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,16 +28,32 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//Класс EventAdminServiceImp для отработки логики запросов и логирования
+import static ru.practicum.main.service.event.EventPrivateServiceImp.getEventStateDeterming;
+
+/**
+ * Класс EventAdminServiceImp имплементация интерфеса EventAdminService для отработки логики запросов и логирования
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventAdminServiceImp implements EventAdminService {
 
     private final EventRepository eventRepository;
-    private final FindObjectInRepository findObjectInRepository;
+    private final FindObjectInService findObjectInService;
     private final ProcessingEvents processingEvents;
 
+    /**
+     * Имплементация метода получения списка событий
+     *
+     * @param users      Список id пользователей, чьи события нужно найти
+     * @param states     Список состояний в которых находятся искомые события
+     * @param categories Список id категорий в которых будет вестись поиск
+     * @param rangeStart Дата и время не раньше которых должно произойти событие
+     * @param rangeEnd   Дата и время не позже которых должно произойти событие
+     * @param from       Количество событий, которые нужно пропустить для формирования текущего набора
+     * @param size       Количество событий в наборе
+     * @return Полученный список событий
+     */
     @Override
     @Transactional(readOnly = true)
     public List<EventFullDto> get(List<Long> users, List<String> states, List<Long> categories,
@@ -66,10 +82,17 @@ public class EventAdminServiceImp implements EventAdminService {
         }
     }
 
+    /**
+     * Метод редактирования события и его статуса (отклонение/публикация)
+     *
+     * @param eventId     содержит ID события
+     * @param updateEvent содержит данные объекта UpdateEventAdminRequest с изменениями
+     * @return воззвращает тредактированный объект передачи данных EventFullDto
+     */
     @Override
     @Transactional
     public EventFullDto update(Long eventId, UpdateEventAdminRequest updateEvent, HttpServletRequest request) {
-        Event event = findObjectInRepository.getEventById(eventId);
+        Event event = findObjectInService.getEventById(eventId);
         eventAvailability(event);
         if (updateEvent.getEventDate() != null) {
             checkEventDate(DateFormatter.formatDate(updateEvent.getEventDate()));
@@ -78,7 +101,7 @@ public class EventAdminServiceImp implements EventAdminService {
             event.setAnnotation(updateEvent.getAnnotation());
         }
         if (updateEvent.getCategory() != null) {
-            Category category = findObjectInRepository.getCategoryById(updateEvent.getCategory());
+            Category category = findObjectInService.getCategoryById(updateEvent.getCategory());
             event.setCategory(category);
         }
         if (updateEvent.getDescription() != null && !updateEvent.getDescription().isBlank()) {
@@ -127,7 +150,11 @@ public class EventAdminServiceImp implements EventAdminService {
         }
     }
 
-    // Метод проверки времени и даты от текущего времени
+    /**
+     * Метод проверки времени и даты от текущего времени
+     *
+     * @param eventDate Время и дата из объекта события
+     */
     private void checkEventDate(LocalDateTime eventDate) {
         LocalDateTime timeNow = LocalDateTime.now().plusHours(1L);
         if (eventDate != null && eventDate.isBefore(timeNow)) {
@@ -136,22 +163,21 @@ public class EventAdminServiceImp implements EventAdminService {
         }
     }
 
-    //Метод определения статуса события
+    /**
+     * Метод определения статуса события
+     *
+     * @param stateAction Текущий статус из объекта события
+     * @return Новый статус после определения
+     */
     private EventState determiningTheStatusForEvent(ActionState stateAction) {
-        if (stateAction.equals(ActionState.SEND_TO_REVIEW)) {
-            return EventState.PENDING;
-        } else if (stateAction.equals(ActionState.CANCEL_REVIEW)) {
-            return EventState.CANCELED;
-        } else if (stateAction.equals(ActionState.PUBLISH_EVENT)) {
-            return EventState.PUBLISHED;
-        } else if (stateAction.equals(ActionState.REJECT_EVENT)) {
-            return EventState.CANCELED;
-        } else {
-            throw new BadRequestException("Статус не соответствует модификатору доступа");
-        }
+        return getEventStateDeterming(stateAction);
     }
 
-    //Метод проверки доступности события
+    /**
+     * Метод проверки доступности события
+     *
+     * @param event Объект события
+     */
     private void eventAvailability(Event event) {
         if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
             throw new ForbiddenEventException("Статус события не позволяет редактировать событие, статус: " + event.getState());

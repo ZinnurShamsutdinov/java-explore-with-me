@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-//Интерфейс EventRepository для обработки запросов к БД
+/**
+ * Интерфейс EventRepository для обработки запросов к БД
+ */
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEventByCategoryIs(Category category);
@@ -23,10 +25,15 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByInitiatorId(Long userId, Pageable pageable);
 
-    @Query(value = "SELECT * FROM events WHERE (initiator_id IN :users OR :users IS NULL) AND state IN :states " +
-            "AND (category_id IN :categories  OR :categories IS NULL) AND (event_date >= to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss')  " +
-            "OR to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss') IS NULL) AND (event_date <= to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss')   " +
-            "OR to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss') IS NULL) OFFSET :from LIMIT :size", nativeQuery = true)
+    @Query(value = "SELECT * FROM events " +
+            "WHERE (initiator_id IN :users OR :users IS NULL) " +
+            "AND state IN :states " +
+            "AND (category_id IN :categories  OR :categories IS NULL) " +
+            "AND (event_date >= to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss')  " +
+            "OR to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss') IS NULL) " +
+            "AND (event_date <= to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss')   " +
+            "OR to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss') IS NULL) " +
+            "OFFSET :from LIMIT :size", nativeQuery = true)
     List<Event> findAllByAdmin(@Param("users") List<Long> users,
                                @Param("states") List<String> states,
                                @Param("categories") List<Long> categories,
@@ -35,12 +42,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                @Param("from") Integer from,
                                @Param("size") Integer size);
 
-    @Query("select e from Event e " +
-            "where (:users is null or e.initiator.id in :users) " +
-            "and (:states is null or e.state in :states) " +
-            "and (:categories is null or e.category.id in :categories) " +
-            "and (cast(:rangeStart as java.time.LocalDateTime) is null or e.eventDate >= :rangeStart) " +
-            "and (cast(:rangeEnd as java.time.LocalDateTime) is null or e.eventDate <= :rangeEnd)")
+    @Query("SELECT e FROM Event e " +
+            "WHERE (:users IS NULL OR e.initiator.id IN :users) " +
+            "AND (:states IS NULL OR e.state IN :states) " +
+            "AND (:categories IS NULL OR e.category.id IN :categories) " +
+            "AND (cast(:rangeStart AS java.time.LocalDateTime) IS NULL OR e.eventDate >= :rangeStart) " +
+            "AND (cast(:rangeEnd AS java.time.LocalDateTime) IS NULL OR e.eventDate <= :rangeEnd)")
     List<Event> findAllByAdminAndState(@Param("users") List<Long> users,
                                        @Param("states") List<EventState> states,
                                        @Param("categories") List<Long> categories,

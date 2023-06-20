@@ -6,7 +6,10 @@ import ru.practicum.main.entity.dto.location.LocationDto;
 
 import javax.validation.constraints.*;
 
-//Модель объекта NewEvent Data Transfer Object Данные для добавления нового события
+/**
+ * Модель объекта NewEvent Data Transfer Object
+ * (Данные для добавления нового события)
+ */
 @Value
 @Builder
 public class NewEventDto {
@@ -19,7 +22,7 @@ public class NewEventDto {
     @Size(min = 20, max = 7000, message = "Минимальное кол-во символов для описания: 20. Максимальное: 7000")
     String description;
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", message = "Неправильный формат даты")
-    String eventDate;
+    String eventDate; //данные в формате yyyy-mm-dd hh:mm:ss
     LocationDto location;
     Boolean paid;
     @PositiveOrZero

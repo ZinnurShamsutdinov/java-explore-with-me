@@ -6,7 +6,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-//Модель сущности Compilation
+/**
+ * Модель сущности Compilation
+ */
 @Getter
 @Setter
 @Builder

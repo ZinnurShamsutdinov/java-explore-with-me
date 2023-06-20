@@ -9,7 +9,9 @@ import ru.practicum.main.entity.dto.compilation.CompilationDto;
 import ru.practicum.main.entity.dto.compilation.NewCompilationDto;
 import ru.practicum.main.service.compilation.CompilationAdminService;
 
-//Класс администрирования подборок событий CompilationAdminController по энпоинту admin/compilations
+/**
+ * Класс CompilationAdminController по энпоинту admin/compilations
+ */
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -18,21 +20,36 @@ public class CompilationAdminController {
     private final CompilationAdminService compilationAdminService;
 
 
-    //Эндпоинт создания подборки
+    /**
+     * Метод (эндпоинт) создания подборки
+     *
+     * @param newCompilationDto Объект NewCompilationDto
+     * @return Созданный объект подборки NewCompilationDto
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto create(@Validated @RequestBody NewCompilationDto newCompilationDto) {
         return compilationAdminService.create(newCompilationDto);
     }
 
-    //Эндпоинт обновления подборки по ID
+    /**
+     * Метод (эндпоинт) обновления подборки по ID
+     *
+     * @param compId                   ID подборки
+     * @param updateCompilationRequest Объект подборки UpdateCompilationRequest
+     * @return Изменённый объект подборки CompilationDto
+     */
     @PatchMapping("/{compId}")
     public CompilationDto update(@PathVariable Long compId,
                                  @Validated @RequestBody UpdateCompilationRequest updateCompilationRequest) {
         return compilationAdminService.update(compId, updateCompilationRequest);
     }
 
-    //Эндпоинт удаления подборки по ID
+    /**
+     * Метод (эндпоинт) удаления подборки по ID
+     *
+     * @param compId ID подборки
+     */
     @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long compId) {

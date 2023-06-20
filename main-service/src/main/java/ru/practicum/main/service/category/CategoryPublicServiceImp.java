@@ -9,13 +9,14 @@ import ru.practicum.main.entity.dto.category.CategoryDto;
 import ru.practicum.main.entity.models.Category;
 import ru.practicum.main.mapper.CategoryMapper;
 import ru.practicum.main.repository.CategoryRepository;
-import ru.practicum.main.repository.FindObjectInRepository;
+import ru.practicum.main.service.FindObjectInService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-//
-// Класс CategoryPublicServiceImp для отработки логики запросов и логирования
+/**
+ * Класс CategoryPublicServiceImp для отработки логики запросов и логирования
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -23,8 +24,15 @@ import java.util.stream.Collectors;
 public class CategoryPublicServiceImp implements CategoryPublicService {
 
     private final CategoryRepository categoryRepository;
-    private final FindObjectInRepository findObjectInRepository;
+    private final FindObjectInService findObjectInService;
 
+    /**
+     * Имплементация метода получения списка категории
+     *
+     * @param from количество категорий, которые нужно пропустить для формирования текущего набора
+     * @param size количество категорий в наборе
+     * @return Список категорий
+     */
     @Override
     public List<CategoryDto> get(int from, int size) {
         log.info("Получен запрос на список всех категорий");
@@ -32,9 +40,15 @@ public class CategoryPublicServiceImp implements CategoryPublicService {
                 .map(CategoryMapper::categoryToCategoryDto).collect(Collectors.toList());
     }
 
+    /**
+     * Имплементация метода получения информации о категории по её ID
+     *
+     * @param id содержит данные catId ID категории
+     * @return Объект CategoryDto
+     */
     @Override
     public CategoryDto get(Long id) {
-        Category category = findObjectInRepository.getCategoryById(id);
+        Category category = findObjectInService.getCategoryById(id);
         log.info("Получен запрос на поиск категории по id: {}", id);
         return CategoryMapper.categoryToCategoryDto(category);
     }

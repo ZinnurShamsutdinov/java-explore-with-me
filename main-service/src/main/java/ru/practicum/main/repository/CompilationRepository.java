@@ -8,7 +8,9 @@ import ru.practicum.main.entity.models.Compilation;
 
 import java.util.List;
 
-//Интерфейс CompilationRepository для обработки запросов к БД
+/**
+ * Интерфейс CompilationRepository для обработки запросов к БД
+ */
 @Repository
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
     @Query("SELECT c FROM Compilation c WHERE c.pinned = :pinned OR :pinned IS NULL")

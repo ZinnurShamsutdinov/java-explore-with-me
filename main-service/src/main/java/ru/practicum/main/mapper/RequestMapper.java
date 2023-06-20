@@ -4,11 +4,18 @@ import lombok.experimental.UtilityClass;
 import ru.practicum.main.entity.dto.request.ParticipationRequestDto;
 import ru.practicum.main.entity.models.Request;
 
-//Утилитарный класс RequestMapper для преобразования Request / ParticipationRequestDto
+/**
+ * Утилитарный класс RequestMapper для преобразования Request / ParticipationRequestDto
+ */
 @UtilityClass
 public class RequestMapper {
 
-    //Преобразование Request в ParticipationRequestDto
+    /**
+     * Преобразование Request в ParticipationRequestDto
+     *
+     * @param request Объект Request
+     * @return Преобразованный объект ParticipationRequestDto
+     */
     public ParticipationRequestDto requestToParticipationRequestDto(Request request) {
         return ParticipationRequestDto.builder()
                 .created(request.getCreated())

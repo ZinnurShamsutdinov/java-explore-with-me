@@ -6,7 +6,9 @@ import ru.practicum.main.entity.enums.RequestStatus;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-//Модель сущности Request
+/**
+ * Модель сущности Request
+ */
 @Getter
 @Setter
 @Builder

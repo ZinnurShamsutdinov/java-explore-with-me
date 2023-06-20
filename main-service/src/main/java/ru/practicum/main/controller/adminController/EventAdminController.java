@@ -13,7 +13,9 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-//Класс администрирования событий EventAdminController по энпоинту admin/events
+/**
+ * Класс EventAdminController по энпоинту admin/events
+ */
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,18 @@ public class EventAdminController {
 
     private final EventAdminService eventAdminService;
 
-    //Эндпоинт получения списка событий
+    /**
+     * Метод (эндпоинт) получения списка событий
+     *
+     * @param users      Список id пользователей, чьи события нужно найти
+     * @param states     Список состояний в которых находятся искомые события
+     * @param categories Список id категорий в которых будет вестись поиск
+     * @param rangeStart Дата и время не раньше которых должно произойти событие
+     * @param rangeEnd   Дата и время не позже которых должно произойти событие
+     * @param from       Количество событий, которые нужно пропустить для формирования текущего набора
+     * @param size       Количество событий в наборе
+     * @return Полученный список событий
+     */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     List<EventFullDto> get(@RequestParam(required = false) List<Long> users,
@@ -37,7 +50,13 @@ public class EventAdminController {
         return eventAdminService.get(users, states, categories, rangeStart, rangeEnd, from, size, request);
     }
 
-    //Эндпоинт редактирования события и его статуса (отклонение/публикация)
+    /**
+     * Метод (эндпоинт) редактирования события и его статуса (отклонение/публикация)
+     *
+     * @param eventId                 ID события
+     * @param updateEventAdminRequest Объект UpdateEventAdminRequest с изменениями
+     * @return Отредактированный объект EventFullDto
+     */
     @PatchMapping("/{eventId}")
     EventFullDto update(@PathVariable Long eventId,
                         @Validated @RequestBody UpdateEventAdminRequest updateEventAdminRequest,

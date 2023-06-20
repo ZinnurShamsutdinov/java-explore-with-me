@@ -12,7 +12,9 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-//Класс (Публичный контроллер для работы с событиями) EventPublicController по энпоинту events
+/**
+ * Класс EventPublicController по энпоинту events
+ */
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +23,20 @@ public class EventPublicController {
 
     private final EventPublicService eventPublicService;
 
-    //Эндпоинт получения списка событий
+    /**
+     * Метод (эндпоинт) получения списка событий
+     *
+     * @param text          Текст для поиска в содержимом аннотации и подробном описании события
+     * @param categories    Список идентификаторов категорий в которых будет вестись поиск
+     * @param paid          Поиск только платных/бесплатных событий
+     * @param rangeStart    Дата и время не раньше которых должно произойти событие
+     * @param rangeEnd      Дата и время не позже которых должно произойти событие
+     * @param onlyAvailable Только события у которых не исчерпан лимит запросов на участие
+     * @param sort          Вариант сортировки: по дате события или по количеству просмотров
+     * @param from          Количество событий, которые нужно пропустить для формирования текущего набора
+     * @param size          Количество событий в наборе
+     * @return Полученный список событий
+     */
     @GetMapping()
     List<EventShortDto> get(@RequestParam(required = false) String text,
                             @RequestParam(required = false) List<Long> categories,
@@ -37,7 +52,12 @@ public class EventPublicController {
                 onlyAvailable, sort, from, size, request);
     }
 
-    //Эндпоинт получения подробной информации о событии по ID
+    /**
+     * Метод (эндпоинт) получения подробной информации о событии по ID
+     *
+     * @param id ID события
+     * @return Искомый объект события
+     */
     @GetMapping("/{id}")
     EventFullDto get(@PathVariable Long id, HttpServletRequest request) {
         return eventPublicService.get(id, request);

@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 
-//Модель сущности Location
+/**
+ * Модель сущности Location
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

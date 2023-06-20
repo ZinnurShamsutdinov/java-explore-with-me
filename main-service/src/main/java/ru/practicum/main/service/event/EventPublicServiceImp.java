@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.client.StatsClient;
 import ru.practicum.common.dto.EndpointHitDto;
+import ru.practicum.main.client.StatsClient;
 import ru.practicum.main.entity.dto.event.EventFullDto;
 import ru.practicum.main.entity.dto.event.EventShortDto;
 import ru.practicum.main.entity.enums.EventState;
@@ -24,8 +24,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//Класс EventPublicServiceImp для отработки логики запросов и логирования
-
+/**
+ * Класс EventPublicServiceImp для отработки логики запросов и логирования
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,9 +36,22 @@ public class EventPublicServiceImp implements EventPublicService {
     private final ProcessingEvents processingEvents;
     private final StatsClient statsClient;
     @Value("${app.name}")
-    private String appName;
-    //private String appName = "main-service";
+    private String appName;  //private String appName = "main-service";
 
+    /**
+     * Имплементация метода получения списка событий
+     *
+     * @param text          Текст для поиска в содержимом аннотации и подробном описании события
+     * @param categories    Список идентификаторов категорий в которых будет вестись поиск
+     * @param paid          Поиск только платных/бесплатных событий
+     * @param rangeStart    Дата и время не раньше которых должно произойти событие
+     * @param rangeEnd      Дата и время не позже которых должно произойти событие
+     * @param onlyAvailable Только события у которых не исчерпан лимит запросов на участие
+     * @param sort          Вариант сортировки: по дате события или по количеству просмотров
+     * @param from          Количество событий, которые нужно пропустить для формирования текущего набора
+     * @param size          Количество событий в наборе
+     * @return Полученный список событий
+     */
     @Override
     @Transactional(readOnly = true)
     public List<EventShortDto> get(String text, List<Long> categories, Boolean paid, String rangeStart,
@@ -67,6 +81,12 @@ public class EventPublicServiceImp implements EventPublicService {
         return newEvents.stream().map(EventMapper::eventToeventShortDto).collect(Collectors.toList());
     }
 
+    /**
+     * Имплементация метода получения подробной информации о событии по ID
+     *
+     * @param id ID события
+     * @return Искомый объект события
+     */
     @Override
     @Transactional(readOnly = true)
     public EventFullDto get(Long id, HttpServletRequest request) {
@@ -87,7 +107,12 @@ public class EventPublicServiceImp implements EventPublicService {
         return EventMapper.eventToEventFullDto(event);
     }
 
-    //Метод проверки даты и времени
+    /**
+     * Метод проверки даты и времени
+     *
+     * @param start Дата и время не раньше которых должно произойти событие
+     * @param end   Дата и время не позже которых должно произойти событие
+     */
     private void checkDateTime(LocalDateTime start, LocalDateTime end) {
         if (start == null) {
             start = LocalDateTime.now().minusYears(100);

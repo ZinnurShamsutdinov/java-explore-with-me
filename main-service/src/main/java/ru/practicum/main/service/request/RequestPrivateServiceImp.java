@@ -15,7 +15,7 @@ import ru.practicum.main.exception.BadRequestException;
 import ru.practicum.main.exception.ConflictRequestException;
 import ru.practicum.main.mapper.RequestMapper;
 import ru.practicum.main.repository.EventRepository;
-import ru.practicum.main.repository.FindObjectInRepository;
+import ru.practicum.main.service.FindObjectInService;
 import ru.practicum.main.repository.RequestRepository;
 import ru.practicum.main.service.event.ProcessingEvents;
 
@@ -26,32 +26,47 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-//Класс RequestPrivateServiceImp для отработки логики запросов
+/**
+ * Класс RequestPrivateServiceImp для отработки логики запросов и логирования
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class RequestPrivateServiceImp implements RequestPrivateService {
 
     private final RequestRepository requestRepository;
-    private final FindObjectInRepository findObjectInRepository;
+    private final FindObjectInService findObjectInService;
     private final EventRepository eventRepository;
     private final ProcessingEvents processingEvents;
 
+    /**
+     * Имплементация метода получения информации о заявках текущего пользователя на участие в чужих событиях
+     *
+     * @param id ID пользователя
+     * @return Список заявок на участие в событиях
+     */
     @Override
     @Transactional(readOnly = true)
     public List<ParticipationRequestDto> get(Long id) {
-        User user = findObjectInRepository.getUserById(id);
+        User user = findObjectInService.getUserById(id);
         List<Request> requests = requestRepository.findAllByRequesterIs(user);
         log.info("Получен запрос на получение всех запросов пользователя с id:" + id);
         return requests.stream().map(RequestMapper::requestToParticipationRequestDto)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Имплементация метода добавления запроса от текущего пользователя на участие в событии
+     *
+     * @param userId  ID пользователя
+     * @param eventId ID события
+     * @return Созданный запрос на участие в событии
+     */
     @Override
     @Transactional
     public ParticipationRequestDto create(Long userId, Long eventId, HttpServletRequest httpServletRequest) {
-        User user = findObjectInRepository.getUserById(userId);
-        Event event = findObjectInRepository.getEventById(eventId);
+        User user = findObjectInService.getUserById(userId);
+        Event event = findObjectInService.getEventById(eventId);
         if (event.getState().equals(EventState.PUBLISHED)) {
             addEventConfirmRequestAndSetViews(event, httpServletRequest);
         } else {
@@ -89,11 +104,18 @@ public class RequestPrivateServiceImp implements RequestPrivateService {
         }
     }
 
+    /**
+     * Имплементация метода обновления/отмены своего запроса на участие в событии
+     *
+     * @param userId    ID пользователя
+     * @param requestId ID запроса
+     * @return Изменённая заявка на участие в событии
+     */
     @Override
     @Transactional
     public ParticipationRequestDto update(Long userId, Long requestId, HttpServletRequest httpServletRequest) {
-        User user = findObjectInRepository.getUserById(userId);
-        Request request = findObjectInRepository.getRequestById(requestId);
+        User user = findObjectInService.getUserById(userId);
+        Request request = findObjectInService.getRequestById(requestId);
         if (!request.getRequester().equals(user)) {
             throw new ConflictRequestException("Пользователь с id: " + userId
                     + "не подавал заявку с id: " + request.getId());
@@ -117,7 +139,12 @@ public class RequestPrivateServiceImp implements RequestPrivateService {
         }
     }
 
-    //Метод проверки пользователя на участие в события
+    /**
+     * Метод проверки пользователя на участие в события
+     *
+     * @param userId  ID пользователя
+     * @param eventId ID события
+     */
     private void checkEventUser(Long userId, Long eventId) {
         Optional<Request> request = requestRepository.findByRequesterIdAndEventId(userId, eventId);
         if (request.isPresent()) {
@@ -125,7 +152,12 @@ public class RequestPrivateServiceImp implements RequestPrivateService {
         }
     }
 
-    //Метод проверки пользователя на участие в своём событии
+    /**
+     * Метод проверки пользователя на участие в своём событии
+     *
+     * @param user  Объект пользователя
+     * @param event Объект события
+     */
     private void checkEventOwner(User user, Event event) {
         if (Objects.equals(user.getId(), event.getInitiator().getId())) {
             throw new ConflictRequestException("Пользователь с id: " + user.getId()
@@ -133,7 +165,11 @@ public class RequestPrivateServiceImp implements RequestPrivateService {
         }
     }
 
-    //Метод проверки статуса публикации события
+    /**
+     * Метод проверки статуса публикации события
+     *
+     * @param event Объект события
+     */
     private void checkEventState(Event event) {
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new ConflictRequestException("Событие с id: " + event.getId()
@@ -141,7 +177,11 @@ public class RequestPrivateServiceImp implements RequestPrivateService {
         }
     }
 
-    // Метод проверки лимита заявок на участие в событии
+    /**
+     * Метод проверки лимита заявок на участие в событии
+     *
+     * @param event Объект события
+     */
     private void checkParticipantLimit(Event event) {
         if (event.getParticipantLimit() == event.getConfirmedRequests() && event.getParticipantLimit() != 0) {
             throw new ConflictRequestException("Событие с id: " + event.getId()
@@ -149,7 +189,11 @@ public class RequestPrivateServiceImp implements RequestPrivateService {
         }
     }
 
-    //Метод добавления подтверждённых событий
+    /**
+     * Метод добавления подтверждённых событий
+     *
+     * @param event Объект события
+     */
     private void addEventConfirmRequestAndSetViews(Event event, HttpServletRequest request) {
         long count = processingEvents.confirmedRequestsForOneEvent(event, RequestStatus.CONFIRMED);
         event.setConfirmedRequests(count);

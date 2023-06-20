@@ -5,7 +5,10 @@ import ru.practicum.main.entity.dto.request.ParticipationRequestDto;
 
 import java.util.List;
 
-//Модель объекта EventRequestStatusUpdateResult Результат подтверждения/отклонения заявок на участие в событии
+/**
+ * Модель объекта EventRequestStatusUpdateResult
+ * (Результат подтверждения/отклонения заявок на участие в событии)
+ */
 @Builder
 @Setter
 @Getter

@@ -6,7 +6,10 @@ import lombok.Value;
 
 import java.time.LocalDateTime;
 
-//Модель объекта ParticipationRequest Data Transfer Object Данные заявки на участие в событии
+/**
+ * Модель объекта ParticipationRequest Data Transfer Object
+ * (Данные заявки на участие в событии)
+ */
 @Value
 @Builder
 public class ParticipationRequestDto {

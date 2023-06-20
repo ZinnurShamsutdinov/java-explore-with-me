@@ -9,11 +9,18 @@ import ru.practicum.main.entity.models.Event;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//Утилитарный класс CompilationMapper для преобразования Compilation / newCompilationDto / CompilationDto
+/**
+ * Утилитарный класс CompilationMapper для преобразования Compilation / newCompilationDto / CompilationDto
+ */
 @UtilityClass
 public class CompilationMapper {
 
-    //Преобразование NewCompilationDto в Compilation
+    /**
+     * Преобразование NewCompilationDto в Compilation
+     *
+     * @param newCompilationDto Объект NewCompilationDto
+     * @return Преобразованный объект Compilation
+     */
     public Compilation newCompilationDtoToCompilationAndEvents(NewCompilationDto newCompilationDto, Set<Event> events) {
         return Compilation.builder()
                 .events(events)
@@ -22,7 +29,12 @@ public class CompilationMapper {
                 .build();
     }
 
-    //Преобразование Compilation в CompilationDto
+    /**
+     * Преобразование Compilation в CompilationDto
+     *
+     * @param compilation Объект Compilation
+     * @return Преобразованный объект CompilationDto
+     */
     public CompilationDto compilationToCompilationDto(Compilation compilation) {
         return CompilationDto.builder()
                 .id(compilation.getId())

@@ -5,7 +5,10 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-//Модель объекта NewCategory Data Transfer Object Данные для добавления новой категории
+/**
+ * Модель объекта NewCategory Data Transfer Object
+ * (Данные для добавления новой категории)
+ */
 @Setter
 @Getter
 @AllArgsConstructor

@@ -10,7 +10,9 @@ import ru.practicum.main.entity.models.User;
 import java.util.List;
 import java.util.Optional;
 
-//Интерфейс RequestRepository для обработки запросов к БД
+/**
+ * Интерфейс RequestRepository для обработки запросов к БД
+ */
 public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findAllByEvent(Event event);
 

@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-//Класс (Закрытый контроллер для работы с запросами) RequestPrivateController по энпоинту users/{userId}/requests
+/**
+ * Класс RequestPrivateController по энпоинту users/{userId}/requests
+ */
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -22,13 +24,24 @@ public class RequestPrivateController {
     private final RequestPrivateService requestPrivateService;
 
 
-    //Эндпоинт получения информации о заявках текущего пользователя на участие в чужих событиях
+    /**
+     * Метод (эндпоинт) получения информации о заявках текущего пользователя на участие в чужих событиях
+     *
+     * @param userId ID пользователя
+     * @return Список заявок на участие в событиях
+     */
     @GetMapping
     List<ParticipationRequestDto> get(@PathVariable Long userId) {
         return requestPrivateService.get(userId);
     }
 
-    //Эндпоинт добавление запроса от текущего пользователя на участие в событии
+    /**
+     * Метод (эндпоинт) добавление запроса от текущего пользователя на участие в событии
+     *
+     * @param userId  ID пользователя
+     * @param eventId ID события
+     * @return Созданный запрос на участие в событии
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     ParticipationRequestDto create(@PathVariable Long userId,
@@ -37,7 +50,13 @@ public class RequestPrivateController {
         return requestPrivateService.create(userId, eventId, request);
     }
 
-    //Эндпоинт отмены своего запроса на участие в событии
+    /**
+     * Метод (эндпоинт) отмены своего запроса на участие в событии
+     *
+     * @param userId    ID пользователя
+     * @param requestId ID запроса
+     * @return Изменённая заявка на участие в событии
+     */
     @PatchMapping("/{requestId}/cancel")
     ParticipationRequestDto update(@PathVariable Long userId,
                                    @PathVariable Long requestId,

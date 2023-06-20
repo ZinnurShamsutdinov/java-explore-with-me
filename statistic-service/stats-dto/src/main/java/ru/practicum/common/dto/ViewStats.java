@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Модель объекта ViewStats
+ */
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor

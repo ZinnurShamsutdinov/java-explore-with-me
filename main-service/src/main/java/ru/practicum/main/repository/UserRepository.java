@@ -6,7 +6,9 @@ import ru.practicum.main.entity.models.User;
 
 import java.util.List;
 
-//Интерфейс UserRepository для обработки запросов к БД
+/**
+ * Интерфейс UserRepository для обработки запросов к БД
+ */
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByIdIn(List<Long> ids, Pageable pageable);
 }

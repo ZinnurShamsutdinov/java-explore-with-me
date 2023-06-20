@@ -10,7 +10,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
- //Модель объекта UpdateEventUserRequest Данные для изменения информации о событии
+/**
+ * Модель объекта UpdateEventUserRequest
+ * (Данные для изменения информации о событии)
+ */
 @Value
 @Builder
 public class UpdateEventUserRequest {

@@ -8,7 +8,9 @@ import ru.practicum.main.entity.enums.EventState;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-//Модель сущности Event
+/**
+ * Модель сущности Event
+ */
 @Getter
 @Setter
 @Builder

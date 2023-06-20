@@ -18,7 +18,9 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-//Класс (Закрытый контроллер для работы с событиями) EventPrivateController по энпоинту users/{userId}/events
+/**
+ * Класс EventPrivateController по энпоинту users/{userId}/events
+ */
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +29,14 @@ public class EventPrivateController {
 
     private final EventPrivateService eventPrivateService;
 
-    //Эндпоинт получения списка событий добавленных текущим пользователем
+    /**
+     * Метод (эндпоинт) получения списка событий добавленных текущим пользователем
+     *
+     * @param userId ID текущего пользователя
+     * @param from   Количество элементов, которые нужно пропустить для формирования текущего набора
+     * @param size   Количество элементов в наборе
+     * @return Список событий
+     */
     @GetMapping()
     List<EventShortDto> get(@PathVariable Long userId,
                             @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
@@ -36,7 +45,13 @@ public class EventPrivateController {
         return eventPrivateService.get(userId, from, size, request);
     }
 
-    //Эндпоинт добавления нового события
+    /**
+     * Метод (эндпоинт) добавления нового события
+     *
+     * @param userId      ID текущего пользователя
+     * @param newEventDto Объект NewEventDto
+     * @return Объект добавленного события EventFullDto
+     */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     EventFullDto create(@PathVariable Long userId,
@@ -44,7 +59,13 @@ public class EventPrivateController {
         return eventPrivateService.create(userId, newEventDto);
     }
 
-    //Эндпоинт получения полной информации о событии добавленном текущим пользователем
+    /**
+     * Метод (эндпоинт) получения полной информации о событии добавленном текущим пользователем
+     *
+     * @param userId  ID текущего пользователя
+     * @param eventId ID события
+     * @return Искомый объект EventFullDto
+     */
     @GetMapping("/{eventId}")
     EventFullDto get(@PathVariable Long userId,
                      @PathVariable Long eventId,
@@ -52,7 +73,14 @@ public class EventPrivateController {
         return eventPrivateService.get(userId, eventId, request);
     }
 
-    //Эндпоинт изменения события добавленного текущим пользователем
+    /**
+     * Метод (эндпоинт) изменения события добавленного текущим пользователем
+     *
+     * @param userId                 ID текущего пользователя
+     * @param eventId                ID события
+     * @param updateEventUserRequest Объект события UpdateEventUserRequest
+     * @return Изменённый объект события EventFullDto
+     */
     @PatchMapping("/{eventId}")
     EventFullDto update(@PathVariable Long userId,
                         @PathVariable Long eventId,
@@ -61,7 +89,13 @@ public class EventPrivateController {
         return eventPrivateService.update(userId, eventId, updateEventUserRequest, request);
     }
 
-    //Эндпоинт получения списка запросов на участие в событии текущего пользователя
+    /**
+     * Метод (эндпоинт) получения списка запросов на участие в событии текущего пользователя
+     *
+     * @param userId  ID текущего пользователя
+     * @param eventId ID события
+     * @return Список заявок на участие
+     */
     @GetMapping("/{eventId}/requests")
     List<ParticipationRequestDto> getRequests(@PathVariable Long userId,
                                               @PathVariable Long eventId,
@@ -69,7 +103,14 @@ public class EventPrivateController {
         return eventPrivateService.getRequests(userId, eventId, request);
     }
 
-    //Эндпоинт изменения статуса (подтверждена/отменена) заявок на участие в событии текущего пользователя
+    /**
+     * Метод (эндпоинт) изменения статуса (подтверждена/отменена) заявок на участие в событии текущего пользователя
+     *
+     * @param userId       ID текущего пользователя
+     * @param eventId      ID события
+     * @param eventRequest Изменение статуса запроса на участие в событии текущего пользователя
+     * @return Результат подтверждения/отклонения заявок на участие в событии
+     */
     @PatchMapping("/{eventId}/requests")
     EventRequestStatusUpdateResult updateStatus(@PathVariable Long userId,
                                                 @PathVariable Long eventId,

@@ -18,6 +18,9 @@ import ru.practicum.common.formatter.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
+/**
+ * Класс ErrorHandler обработчик ошибок
+ */
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {

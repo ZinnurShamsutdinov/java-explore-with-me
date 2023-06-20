@@ -6,7 +6,10 @@ import lombok.Value;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-//Модель объекта Category Data Transfer Object
+/**
+ * Модель объекта Category Data Transfer Object
+ * (Категория)
+ */
 @Value
 @Builder
 public class CategoryDto {
