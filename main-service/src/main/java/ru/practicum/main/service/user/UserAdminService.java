@@ -4,10 +4,11 @@ import ru.practicum.main.entity.dto.user.NewUserDto;
 import ru.practicum.main.entity.dto.user.UserDto;
 
 import java.util.List;
+
 /**
-*Интерфейс UserAdminService для обработки логики запросов из UserAdminController
+ * Интерфейс UserAdminService для обработки логики запросов из UserAdminController
  */
- public interface UserAdminService {
+public interface UserAdminService {
 
     /**
      * Метод получения информации о пользователях
