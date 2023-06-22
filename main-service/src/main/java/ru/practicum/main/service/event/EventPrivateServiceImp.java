@@ -68,7 +68,7 @@ public class EventPrivateServiceImp implements EventPrivateService {
         List<Event> eventsAddViews = processingEvents.addViewsInEventsList(events, request);
         List<Event> newEvents = processingEvents.confirmRequests(eventsAddViews);
         log.info("Получен приватный запрос на получение всех событий для пользователя с id: {}", userId);
-        return newEvents.stream().map(EventMapper::eventToeventShortDto).collect(Collectors.toList());
+        return newEvents.stream().map(EventMapper::eventToEventShortDto).collect(Collectors.toList());
     }
 
     /**

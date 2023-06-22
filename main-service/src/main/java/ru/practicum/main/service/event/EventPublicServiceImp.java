@@ -76,9 +76,9 @@ public class EventPublicServiceImp implements EventPublicService {
         log.info("Получен публичный запрос на получение всех событий");
         if (!onlyAvailable) {
             return newEvents.stream().filter(e -> e.getParticipantLimit() >= e.getConfirmedRequests())
-                    .map(EventMapper::eventToeventShortDto).collect(Collectors.toList());
+                    .map(EventMapper::eventToEventShortDto).collect(Collectors.toList());
         }
-        return newEvents.stream().map(EventMapper::eventToeventShortDto).collect(Collectors.toList());
+        return newEvents.stream().map(EventMapper::eventToEventShortDto).collect(Collectors.toList());
     }
 
     /**

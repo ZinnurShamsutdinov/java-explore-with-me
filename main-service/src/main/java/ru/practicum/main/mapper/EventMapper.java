@@ -1,6 +1,7 @@
 package ru.practicum.main.mapper;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.main.entity.dto.comment.EventCommentDto;
 import ru.practicum.main.entity.dto.event.EventFullDto;
 import ru.practicum.main.entity.dto.event.EventShortDto;
 import ru.practicum.main.entity.dto.event.NewEventDto;
@@ -25,7 +26,7 @@ public class EventMapper {
      * @param event Объект Event
      * @return Преобразованный объект EventShortDto
      */
-    public EventShortDto eventToeventShortDto(Event event) {
+    public EventShortDto eventToEventShortDto(Event event) {
         return EventShortDto.builder()
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.categoryToCategoryDto(event.getCategory()))
@@ -97,4 +98,16 @@ public class EventMapper {
                 .views(views)
                 .build();
     }
+
+    public EventCommentDto eventToEventCommentDto(Event event) {
+        return EventCommentDto.builder()
+                .annotation(event.getAnnotation())
+                .category(CategoryMapper.categoryToCategoryDto(event.getCategory()))
+                .eventDate(event.getEventDate())
+                .id(event.getId())
+                .initiator(UserMapper.userToUserShortDto(event.getInitiator()))
+                .title(event.getTitle())
+                .build();
+    }
+
 }
