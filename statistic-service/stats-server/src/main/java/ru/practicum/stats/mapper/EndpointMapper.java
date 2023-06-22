@@ -8,9 +8,18 @@ import ru.practicum.stats.model.EndpointHit;
 
 import java.time.LocalDateTime;
 
+/**
+ * Класс EndpointMapper для преобразования EndpointHitDto в EndpointHit
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EndpointMapper {
 
+    /**
+     * Статический метод преобразования EndpointHitDto в EndpointHit
+     *
+     * @param endpointHitDto объект endpointHitDto
+     * @return Преобразованный объект Hit
+     */
     public static EndpointHit mapToEndpointHit(EndpointHitDto endpointHitDto) {
         return EndpointHit.builder()
                 .app(endpointHitDto.getApp())
@@ -20,6 +29,12 @@ public class EndpointMapper {
                 .build();
     }
 
+    /**
+     * Статический метод преобразования EndpointHit в EndpointHitDto
+     *
+     * @param endpointHit объект endpointHit
+     * @return Преобразованный объект EndpointHitDto
+     */
     public static EndpointHitDto mapToEndpointHitDto(EndpointHit endpointHit) {
         return EndpointHitDto.builder()
                 .app(endpointHit.getApp())

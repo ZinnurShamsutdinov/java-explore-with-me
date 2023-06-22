@@ -11,6 +11,9 @@ import ru.practicum.stats.repository.StatisticRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Класс StatisticServiceImpl для отработки логики запросов и логирования
+ */
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
