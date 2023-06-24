@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.main.entity.enums.EventState;
 import ru.practicum.main.entity.models.Category;
 import ru.practicum.main.entity.models.Event;
+import ru.practicum.main.exception.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -76,4 +77,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                 @Param("size") Integer size);
 
     Optional<Event> findEventByIdAndStateIs(Long id, EventState state);
+
+
+    default Event get(long id) {
+        return findById(id).orElseThrow(()
+                -> new ResourceNotFoundException("Событие c id:  " + id + " не существует"));
+    }
+
 }
