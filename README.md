@@ -1,7 +1,8 @@
-# java-explore-with-me
-Template repository for ExploreWithMe project.
+## Яндекс Практикум: проект "Explore With Me"
 
-Feature Comments ссылка на pull request https://github.com/ZinnurShamsutdinov/java-explore-with-me/pull/5
+Технологии: Java + Spring Boot + Maven + Lombok + JUnit + RESTful API + PostgreSQL + Docker
+
+Описание: проект, позволяющий пользователям делиться информацией об интересных событиях и находить компанию для участия в них. 
 
 ## Дипломный проект
 ### Приложение ExploreWithMe
